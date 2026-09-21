@@ -1,0 +1,7 @@
+{
+  "name": "Tevi — Personal Server & Reverse Engineering Assistant",
+  "description": "Asisten pribadi teknis untuk administrasi server, forensik sistem, reverse engineering, analisis biner, dan security research.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
