@@ -48,10 +48,31 @@ export const ApiAnalyzer: React.FC = () => {
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal menguji endpoint API.");
+      const contentType = res.headers.get("content-type") || "";
+      const rawResponse = await res.text();
+      let data: ApiResponseData | { error?: string };
+
+      try {
+        data = contentType.includes("application/json")
+          ? JSON.parse(rawResponse)
+          : { error: rawResponse.slice(0, 240) };
+      } catch {
+        data = { error: rawResponse.slice(0, 240) };
       }
+
+      if (!res.ok) {
+        throw new Error(
+          ("error" in data && data.error) ||
+            `Server mengembalikan HTTP ${res.status} tanpa respons JSON.`
+        );
+      }
+
+      if (!("status" in data)) {
+        throw new Error(
+          "Server mengembalikan respons non-JSON. Pastikan server Tevi berjalan di port 3000."
+        );
+      }
+
       setResponse(data);
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan saat memanggil endpoint.");
